@@ -1,0 +1,28 @@
+{
+  "properties": [
+    {
+      "name": "register.rule.username",
+      "type": "java.lang.Boolean",
+      "description": "Description for register.rule.username."
+    },
+    {
+      "name": "register.rule.nickname",
+      "type": "java.lang.Boolean",
+      "description": "Description for register.rule.nickname."
+    },
+    {
+      "name": "register.rule.password",
+      "type": "java.lang.Boolean",
+      "description": "Description for register.rule.password."
+    },
+    {
+      "name": "register.rule.email",
+      "type": "java.lang.Boolean",
+      "description": "Description for register.rule.email."
+    },
+    {
+      "name": "register.rule.phone",
+      "type": "java.lang.Boolean",
+      "description": "Description for register.rule.phone."
+    }
+  ] }

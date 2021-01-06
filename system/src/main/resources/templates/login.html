@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>登录</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="/img/login.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
+</head>
+
+<body>
+<div class="loginBox" id="wrap">
+    <h2><span id="title">Login</span></h2>
+    <form action="">
+        <div class="item">
+            <input type="text" v-model="user.username" required>
+            <label>用户名</label>
+        </div>
+        <div class="item">
+            <input type="password" v-model="user.password" id="pwd" required>
+            <label>密码</label>
+            <img class="hide" src="/img/eye_hide.svg" title="显示密码" id="hide" draggable="false" oncontextmenu="return false">
+            <img class="show" src="/img/eye_show.svg" title="隐藏密码" id="show" draggable="false" oncontextmenu="return false">
+        </div>
+        <button class="btn" @click.prevent="login">登录
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <a class="register" href="/register">注册>></a>
+    </form>
+</div>
+</body>
+</html>
+<script src="/js/vue.js"></script>
+<script src="/js/axios.min.js"></script>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    const app = new Vue({
+        el: "#wrap",
+        data: {
+            user: {},//用来保存用户数据
+        },
+        methods: {
+            //用户登录
+            login() {
+                //发送登录请求
+                axios.post("/system/user/login", this.user).then(res => {
+                    console.log(res.data);
+                    if (res.data.code === 200) {
+                        alert("登陆成功,点击确定进入主页!");
+                    } else {
+                        alert(res.data.msg);
+                    }
+                });
+            }
+        }
+    });
+</script>

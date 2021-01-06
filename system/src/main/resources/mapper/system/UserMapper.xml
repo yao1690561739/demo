@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yao.system.dao.UserDao">
+    <sql id="selectUserVo">
+        select u.id,u.username,u.nickname,u.dept_id,d.dept_name,
+        u.sex,u.email,u.phone,u.remark,u.status,
+        u1.nickname as create_name,u.create_time,
+        u2.nickname as update_name,u.update_time
+        from sys_user u
+        left join sys_dept d on u.dept_id=d.dept_id
+        left join sys_user u1 on u.create_by=u1.id
+        left join sys_user u2 on u.update_by=u2.id
+    </sql>
+
+    <select id="getUserById" parameterType="Integer" resultType="com.yao.system.vo.UserVo">
+        <include refid="selectUserVo"/>
+        where u.id=#{id}
+    </select>
+
+    <select id="getPwdById" parameterType="Integer" resultType="string">
+        select password from sys_user where id=#{id}
+    </select>
+
+    <select id="getRoleByUserId" parameterType="Integer" resultType="com.yao.system.entity.Role">
+        select id,title,name from sys_role r
+        left join sys_user_role ur on r.id=ur.role_id
+        where r.status=0
+        and ur.user_id=#{id}
+    </select>
+
+    <select id="getMenuByUserId" resultType="com.yao.system.entity.Menu">
+        select id,title,url,perms from sys_menu m
+        left join sys_role_menu rm on m.id=rm.menu_id
+        left join sys_user_role ur on rm.role_id=ur.role_id
+        where m.status=0
+        and ur.user_id=#{id}
+    </select>
+
+    <select id="getUserByName" parameterType="string" resultType="com.yao.system.entity.User">
+        select * from sys_user
+        where username=#{username}
+    </select>
+
+    <select id="getUsers" parameterType="com.yao.system.dto.UserDto" resultType="com.yao.system.vo.UserVo">
+        <include refid="selectUserVo"/>
+        <where>
+            <if test="username != null and username!=''">and u.username like concat('%', #{username}, '%')</if>
+            <if test="nickname != null and nickname!=''">and u.nickname like concat('%', #{nickname}, '%')</if>
+            <if test="status != null">and u.status =#{status}</if>
+            <if test="sex != null">and u.sex =#{sex}</if>
+        </where>
+    </select>
+
+    <insert id="addUser" parameterType="com.yao.system.entity.User" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username !=''">username,</if>
+            <if test="nickname != null and nickname !=''">nickname,</if>
+            <if test="password != null and password !=''">password,</if>
+            <if test="salt != null and salt !=''">salt,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="picture != null and picture !=''">picture,</if>
+            <if test="sex != null">sex,</if>
+            <if test="email != null and email !=''">email,</if>
+            <if test="phone != null and phone !=''">phone,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="status != null and status !=''">status,</if>
+            <if test="createBy != null and createBy !=''">create_by,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null and username !=''">#{username},</if>
+            <if test="nickname != null and nickname !=''">#{nickname},</if>
+            <if test="password != null and password !=''">#{password},</if>
+            <if test="salt != null and salt !=''">#{salt},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="picture != null and picture !=''">#{picture},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="email != null and email !=''">#{email},</if>
+            <if test="phone != null and phone !=''">#{phone},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="status != null and status !=''">#{status},</if>
+            <if test="createBy != null and createBy !=''">#{createBy},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="editUser" parameterType="com.yao.system.entity.User">
+        update sys_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null and username !=''">username = #{username},</if>
+            <if test="nickname != null and nickname !=''">nickname = #{nickname},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="picture != null and picture !=''">picture = #{picture},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="email != null and email !=''">email = #{email},</if>
+            <if test="phone != null and phone !=''">phone = #{phone},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="status != null and status !=''">status = #{status},</if>
+            <if test="updateBy != null and updateBy !=''">update_by = #{updateBy},</if>
+            update_time=sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="editPwd" parameterType="com.yao.system.dto.PasswordDto">
+        update sys_user set password=#{newPwd},salt=#{salt} where id=#{id}
+    </update>
+
+    <update id="updateStatus">
+        update sys_user set status=#{status} where FIND_IN_SET(id,#{ids})
+    </update>
+</mapper>

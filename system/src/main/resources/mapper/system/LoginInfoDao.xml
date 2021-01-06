@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yao.system.dao.LoginInfoDao">
+    <sql id="selectLoginInfoVo">
+        select * from sys_login_info
+    </sql>
+
+    <select id="getLoginInfoById" parameterType="integer" resultType="com.yao.system.entity.LoginInfo">
+        <include refid="selectLoginInfoVo"/>
+        where id=#{id}
+    </select>
+
+    <select id="getLoginInfos" parameterType="com.yao.system.dto.LoginInfoDto" resultType="com.yao.system.entity.LoginInfo">
+        <include refid="selectLoginInfoVo"/>
+        <where>
+            <if test="loginAccount != null and loginAccount!=''">and login_account like concat('%', #{loginAccount}, '%')</if>
+            <if test="loginName != null and loginName!=''">and login_name like concat('%', #{loginName}, '%')</if>
+            <if test="browser != null and browser!=''">and browser like concat('%', #{browser}, '%')</if>
+            <if test="os != null and os!=''">and os like concat('%', #{os}, '%')</if>
+            <if test="status != null and status!=''">and status = #{status}</if>
+        </where>
+    </select>
+
+    <insert id="addLoginInfo" parameterType="com.yao.system.entity.LoginInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_login_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="loginAccount != null and loginAccount !=''">login_account,</if>
+            <if test="loginName != null and loginName !=''">login_name,</if>
+            <if test="ipaddr != null and ipaddr !=''">ipaddr,</if>
+            <if test="browser != null and browser !=''">browser,</if>
+            <if test="os != null and os !=''">os,</if>
+            <if test="status != null and status !=''">status,</if>
+            <if test="msg != null and msg !=''">msg,</if>
+            login_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="loginAccount != null and loginAccount !=''">#{loginAccount},</if>
+            <if test="loginName != null and loginName !=''">#{loginName},</if>
+            <if test="ipaddr != null and ipaddr !=''">#{ipaddr},</if>
+            <if test="browser != null and browser !=''">#{browser},</if>
+            <if test="os != null and os !=''">#{os},</if>
+            <if test="status != null and status !=''">#{status},</if>
+            <if test="msg != null and msg !=''">#{msg},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <delete id="removeLoginInfos" parameterType="String">
+        delete from sys_login_info where id in
+        <foreach item="ids" collection="array" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <delete id="removeAllLoginInfos">
+        delete from sys_login_info
+    </delete>
+
+</mapper>

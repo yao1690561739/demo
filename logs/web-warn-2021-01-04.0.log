@@ -1,0 +1,4 @@
+2021-01-04 15:02:54.266 [main] WARN  s.d.s.w.readers.parameter.ParameterDataTypeReader - Trying to infer dataType org.springframework.web.multipart.MultipartFile[]
+2021-01-04 15:03:39.117 [main] WARN  s.d.s.w.readers.parameter.ParameterDataTypeReader - Trying to infer dataType org.springframework.web.multipart.MultipartFile[]
+2021-01-04 15:04:19.443 [main] WARN  s.d.s.w.readers.parameter.ParameterDataTypeReader - Trying to infer dataType org.springframework.web.multipart.MultipartFile[]
+2021-01-04 15:05:57.458 [main] WARN  s.d.s.w.readers.parameter.ParameterDataTypeReader - Trying to infer dataType org.springframework.web.multipart.MultipartFile[]

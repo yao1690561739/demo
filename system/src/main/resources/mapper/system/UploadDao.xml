@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yao.system.dao.UploadDao">
+    <sql id="selectFileVo">
+        select f.id, realname, newname, path, type, size, md5, sha1, counts, f.remark,
+        f.create_by, u1.nickname as create_name, f.create_time,f.update_by, u2.nickname as update_name, f.update_time
+        from sys_file f
+        left join sys_user u1 on f.create_by=u1.id
+        left join sys_user u2 on f.update_by=u2.id
+    </sql>
+
+    <select id="getFileByMd5" parameterType="string" resultType="com.yao.system.vo.UploadVo">
+        <include refid="selectFileVo"/>
+        where f.md5=#{md5}
+    </select>
+
+    <select id="getFiles" parameterType="com.yao.system.dto.UploadDto" resultType="com.yao.system.vo.UploadVo">
+        <include refid="selectFileVo"/>
+        <where>
+            <if test="realname != null and realname!=''">and realname like concat('%', #{realname}, '%')</if>
+            <if test="createName != null and createName!=''">and create_name like concat('%', #{createName}, '%')</if>
+        </where>
+    </select>
+
+    <insert id="addFile" parameterType="com.yao.system.entity.Upload" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="realname != null and realname !=''">realname,</if>
+            <if test="newname != null and newname !=''">newname,</if>
+            <if test="path != null and path !=''">path,</if>
+            <if test="type != null and type !=''">type,</if>
+            <if test="size != null">size,</if>
+            <if test="md5 != null and md5 !=''">md5,</if>
+            <if test="sha1 != null and sha1 !=''">sha1,</if>
+            <if test="counts != null">counts,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="createBy != null and createBy !=''">create_by,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="realname != null and realname !=''">#{realname},</if>
+            <if test="newname != null and newname !=''">#{newname},</if>
+            <if test="path != null and path !=''">#{path},</if>
+            <if test="type != null and type !=''">#{type},</if>
+            <if test="size != null">#{size},</if>
+            <if test="md5 != null and md5 !=''">#{md5},</if>
+            <if test="sha1 != null and sha1 !=''">#{sha1},</if>
+            <if test="counts != null">#{counts},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy !=''">#{createBy},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="editFile" parameterType="com.yao.system.entity.Upload">
+        update sys_file
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="realname != null and realname !=''">realname = #{realname},</if>
+            <if test="newname != null and newname !=''">newname = #{newname},</if>
+            <if test="path != null">path = #{path},</if>
+            <if test="type != null and type !=''">type = #{type},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="md5 != null and md5 !=''">md5 = #{md5},</if>
+            <if test="sha1 != null and sha1 !=''">sha1 = #{sha1},</if>
+            <if test="counts != null">counts = #{counts},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy !=''">update_by = #{updateBy},</if>
+            update_time=sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="removeFiles" parameterType="String">
+        delete from sys_file where id in
+        <foreach item="ids" collection="array" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+</mapper>

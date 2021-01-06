@@ -1,0 +1,6 @@
+2021-01-04 15:06:48.632 [http-nio-80-exec-3] DEBUG com.yao.system.dao.UserDao.getUsers - ==>  Preparing: select u.id,u.username,u.nickname,u.dept_id,d.dept_name, u.sex,u.email,u.phone,u.remark,u.status, u1.nickname as create_name,u.create_time, u2.nickname as update_name,u.update_time from sys_user u left join sys_dept d on u.dept_id=d.dept_id left join sys_user u1 on u.create_by=u1.id left join sys_user u2 on u.update_by=u2.id 
+2021-01-04 15:06:48.643 [http-nio-80-exec-3] DEBUG com.yao.system.dao.UserDao.getUsers - ==> Parameters: 
+2021-01-04 15:06:48.671 [http-nio-80-exec-3] DEBUG com.yao.system.dao.UserDao.getUsers - <==      Total: 6
+2021-01-04 15:06:48.691 [http-nio-80-exec-3] DEBUG com.yao.system.dao.ActionLogDao.addActionLog - ==>  Preparing: insert into sys_action_log ( name, ipaddr, clazz, method, message, create_time ) values ( ?, ?, ?, ?, ?, sysdate() ) 
+2021-01-04 15:06:48.691 [http-nio-80-exec-3] DEBUG com.yao.system.dao.ActionLogDao.addActionLog - ==> Parameters: 查询用户信息列表(String), 0:0:0:0:0:0:0:1(String), com.yao.system.controller.UserController(String), list(String), 查询用户信息列表成功(String)
+2021-01-04 15:06:48.719 [http-nio-80-exec-3] DEBUG com.yao.system.dao.ActionLogDao.addActionLog - <==    Updates: 1
